@@ -4,10 +4,10 @@ function Pagination() {
     const [pageNo,setpageNo] = useState(1);
     const goToPrev = ()=>{
         if(pageNo==1) return;
-        setpageNo(pageNo-1);
+        setpageNo(currentPage => currentPage-1);
     }
     const goToNext = ()=>{
-        setpageNo(pageNo+1);
+        setpageNo(currentPage => currentPage+1);
     }
   return (
    <>
