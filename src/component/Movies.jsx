@@ -1,7 +1,8 @@
 import React, { useContext, useEffect, useState } from "react";
 import axios from "axios";
 import MovieCard from "./MovieCard";
-import { WatchListContext } from "../App";
+import { useSelector, useDispatch } from 'react-redux';
+import watchListSlice from "../redux/slice/watchlist";
 function Movies() {
   const [movies, setMovies] = useState([
     {
@@ -27,8 +28,10 @@ function Movies() {
   ]);
   const [pageNo, setPageNo] = useState(1);
   // const [watchList,setWatchList] = useState([]);
-  const [watchList,setWatchList] = useContext(WatchListContext);
-
+  //const [watchList,setWatchList] = useContext(WatchListContext);
+  const {watchList}= useSelector((store)=> store.watchListState); 
+  const actions = watchListSlice.actions;
+  const dispatch=useDispatch();
   useEffect(() => {
     const options = {
       method: "GET",
@@ -70,14 +73,16 @@ function Movies() {
   const addToWatchlist=(movieObj)=>{
     const updatedWatchList = [...watchList,movieObj];
     console.log(updatedWatchList);
-    setWatchList(updatedWatchList);
+    //setWatchList(updatedWatchList);
+     dispatch(actions.setWatchList(updatedWatchList));
     //localStorage.setItem("watchList",JSON.stringify(updatedWatchList));
   };
 
   const removeFromWatchlist=(movieObj)=>{
     let updatedWatchList = watchList.filter(obj=>obj.id!=movieObj.id)
     console.log(updatedWatchList);
-    setWatchList(updatedWatchList);
+   // setWatchList(updatedWatchList);
+    dispatch(actions.setWatchList(updatedWatchList));
     //localStorage.setItem("watchList",JSON.stringify(updatedWatchList))
   };
 

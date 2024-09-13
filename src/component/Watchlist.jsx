@@ -1,9 +1,12 @@
-import React, { useEffect, useState, useContext } from "react";
-import { WatchListContext } from "../App";
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import watchListSlice from "../redux/slice/watchlist";
 import genreids from "../utils/utils";
 console.log(genreids);
 function watchList() {
-  const [watchList,setwatchList] = useContext(WatchListContext);
+  const {watchList} = useSelector((store)=> store.watchListState)
+  const actions = watchListSlice.actions;
+  const dispatch = useDispatch();
   const [search, setSearch] = useState("");
   const [genreList, setGenreList] = useState([
     "All Genres",
@@ -27,20 +30,22 @@ function watchList() {
 
   const handleAscendindRatings = () => {
     // console.log("low to high");
-    let sortedAscending = watchList.sort(
+    const unSortedList = JSON.parse(JSON.stringify(watchList));
+    let sortedAscending = unSortedList.sort(
       (m1, m2) => m1.vote_average - m2.vote_average
     );
     // console.log(sortedAscending);
-    setwatchList([...sortedAscending]);
+    dispatch(actions.setWatchList([...sortedAscending]));
   };
 
   const handleDecendindRatings = () => {
     // console.log("hight to low");
-    let sortedDescending = watchList.sort(
+    const unSortedList = JSON.parse(JSON.stringify(watchList));
+    let sortedDescending = unSortedList.sort(
       (m1, m2) => m2.vote_average - m1.vote_average
     );
     // console.log(sortedDescending);
-    setwatchList([...sortedDescending]);
+    dispatch(actions.setWatchList([...sortedDescending]));
   };
 
   const handleSearch = (e) => {
@@ -55,7 +60,7 @@ function watchList() {
     let restOfTheMovies=watchList.filter(movie=>{
       return movie.id!=id;
     })
-    setwatchList(restOfTheMovies);
+    dispatch(actions.setWatchList(restOfTheMovies));
     // localStorage.setItem("watchList",JSON.stringify(restOfTheMovies));
   }  
 
